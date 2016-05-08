@@ -31,20 +31,29 @@ bot.use(function (session, next) {
 });
 
 bot.add("/userProfile", [
-    function (session) {
-        builder.Prompts.text(session, "May i know your name please?");
+    function (session, args, next) {
+        if (!session.userData.nameAlreadyAsked) {
+            builder.Prompts.text(session, "May i know your name please?");
+        }
+        else {
+            next();
+        }
     },
     function (session, results) {
-
         builder.LuisDialog.recognize(session.message.text, modelUri, function (err, intents, entities) {
+            if (null != err) {
+                session.endDialog("Unexpected error while parsing your answer. Try again after sometime!");
+                return;
+            }
+            session.userData.nameAlreadyAsked = true;
             var entity = builder.EntityRecognizer.findEntity(entities, 'name');
             if (null != entity) {
                 session.userData.name = entity.entity;
                 session.beginDialog("/showOffer");
             }
             else {
-                session.send("I am sorry, i did not understand your answser. Please provide your name.");
-                session.replaceDialog("/userProfile");
+                session.send("I am sorry, i did not understand your answser. Please provide your name again.");
+                //session.replaceDialog("/userProfile");
             }
         });
     }
@@ -69,7 +78,7 @@ bot.add("/showOffer", [
                     "To check whether the service is available in your location, can u please tell me your address with zip code.");
             }
             else {
-                next({ response: session.userData.zipCode });
+                next({ response: session.message.text });
             }
         }
         else {
@@ -124,7 +133,7 @@ bot.add("/showOffer", [
             }
             else {
                 //Pl. provide the valid zip code.
-                session.userData.zipCode = null;
+                //session.userData.zipCode = null;
                 session.send("Sorry! " + "I dont see the zip code in the address you provided...\nPlease provide me the address with zip code.");
                 //session.replaceDialog("/showOffer");
             }
@@ -138,9 +147,14 @@ bot.add("/showOffer", [
             }            
         }
     },
-    function (session, results) {
+    function (session, results, next) {
         if (results.response) {
             builder.LuisDialog.recognize(session.message.text, modelUri, function (err, intents, entities) {
+                if (null != err) {
+                    session.endDialog("Unexpected error while parsing your answer. Try again after sometime!");
+                    return;
+                }
+
                 var entity = builder.EntityRecognizer.findEntity(entities, 'sub-product');
                 if (null != entity) {
                     switch (entity.entity) {
@@ -157,7 +171,7 @@ bot.add("/showOffer", [
                                 });
                                 //session.send("50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo");
                             session.send(reply);
-                            builder.Prompts.confirm(session, "Do you like to proceed?\nPlease confirm " + session.userData.name);
+                            builder.Prompts.confirm(session, "Do you like to proceed " + session.userData.name + "?\nPlease confirm." );
                             break;
                         case "internet":                            
                             var captionText = "We have found a perfect offer for you. Please check this.\n";
@@ -203,6 +217,15 @@ bot.add("/showOffer", [
                 }
             });
         }
+    },
+    function (session, results) {
+        if (results.response) {
+            session.send("Please click the Terms of Service Page.");            
+        }
+        else {
+            session.send("Ok no problem.");            
+        }
+        session.endDialog();
     }
 ]);
 
