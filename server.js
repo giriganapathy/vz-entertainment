@@ -40,7 +40,7 @@ bot.add("/userProfile", [
         });
     }
 ]);
-bot.add("/", dialog);
+//bot.add("/", dialog);
 bot.add("/showOffer", [
     function (session, args, next) {
         if (!session.userData.selectedOffer) {
@@ -189,7 +189,7 @@ bot.add("/showOffer", [
         }
     }
 ]);
-dialog.onDefault(builder.DialogAction.send("I am sorry, i did not understand your answser"));
+//dialog.onDefault(builder.DialogAction.send("I am sorry, i did not understand your answser"));
 //bot.listenStdin();
 var server = restify.createServer();
 server.use(bot.verifyBotFramework());
