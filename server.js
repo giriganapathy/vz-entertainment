@@ -211,7 +211,8 @@ dialog.onDefault(builder.DialogAction.send("2:I am sorry, i did not understand y
 
 //bot.listenStdin();
 var server = restify.createServer();
-server.use(bot.verifyBotFramework({ appId: process.env.appId, appSecret: process.env.appSecret }));
+//server.use(bot.verifyBotFramework({ appId: process.env.appId, appSecret: process.env.appSecret }));
+server.use(bot.verifyBotFramework());
 server.post("/api/messages", bot.listen());
 server.listen(process.env.port, function () {
     console.log("%s listening to %s", server.name, server.url);
