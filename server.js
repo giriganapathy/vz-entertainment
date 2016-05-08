@@ -43,7 +43,7 @@ bot.add("/userProfile", [
                 session.beginDialog("/showOffer");
             }
             else {
-                session.send("I am sorry, i did not understand your answser.");
+                session.send("1:I am sorry, i did not understand your answser.");
                 session.replaceDialog("/userProfile");
             }
         });
@@ -207,7 +207,7 @@ bot.add("/showOffer", [
 ]);
 
 
-dialog.onDefault(builder.DialogAction.send("I am sorry, i did not understand your answser"));
+dialog.onDefault(builder.DialogAction.send("2:I am sorry, i did not understand your answser"));
 
 //bot.listenStdin();
 var server = restify.createServer();
