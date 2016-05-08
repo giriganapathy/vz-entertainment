@@ -43,7 +43,7 @@ bot.add("/userProfile", [
                 session.beginDialog("/showOffer");
             }
             else {
-                session.send("1:I am sorry, i did not understand your answser.");
+                session.send("I am sorry, i did not understand your answser.");
                 session.replaceDialog("/userProfile");
             }
         });
@@ -126,7 +126,7 @@ bot.add("/showOffer", [
                 //Pl. provide the valid zip code.
                 session.userData.zipCode = null;
                 session.send("Sorry! " + "I dont see the zip code in the address you provided...\nPlease provide me the address with zip code.");
-                session.replaceDialog("/showOffer");
+                //session.replaceDialog("/showOffer");
             }
         }
         else {
@@ -193,13 +193,13 @@ bot.add("/showOffer", [
 
                         default:
                             session.send("I am sorry, i did not understand your answser.");
-                            session.replaceDialog("/showOffer");
+                            //session.replaceDialog("/showOffer");
                             break;
                     }
                 }
                 else {
                     session.send("I am sorry, i did not understand your answser.");
-                    session.replaceDialog("/showOffer");
+                    //session.replaceDialog("/showOffer");
                 }
             });
         }
@@ -207,7 +207,7 @@ bot.add("/showOffer", [
 ]);
 
 
-dialog.onDefault(builder.DialogAction.send("2:I am sorry, i did not understand your answser"));
+//dialog.onDefault(builder.DialogAction.send("I am sorry, i did not understand your answser"));
 
 //bot.listenStdin();
 var server = restify.createServer();
