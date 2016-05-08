@@ -43,7 +43,7 @@ bot.add("/userProfile", [
                 session.beginDialog("/showOffer");
             }
             else {
-                session.send("I am sorry, i did not understand your answser.");
+                session.send("I am sorry, i did not understand your answser. Please provide your name.");
                 session.replaceDialog("/userProfile");
             }
         });
@@ -84,7 +84,7 @@ bot.add("/showOffer", [
 
             var userResponse = results.response;
 
-            var zipAndStatePattern = "\\s\\w{2}\\s\\d{5}";
+            var zipAndStatePattern = "\\w{2}\\s\\d{5}";
             var regExpZipAndStatePattern = new RegExp(zipAndStatePattern);
             if (regExpZipAndStatePattern.test(userResponse)) {
                 var zipAndStateArr = regExpZipAndStatePattern.exec(userResponse);
@@ -192,13 +192,13 @@ bot.add("/showOffer", [
                             break;
 
                         default:
-                            session.send("I am sorry, i did not understand your answser.");
+                            session.send("I am sorry, i did not understand your answser... Please tell me which one do you use more..like internet/tv/phone...");
                             //session.replaceDialog("/showOffer");
                             break;
                     }
                 }
                 else {
-                    session.send("I am sorry, i did not understand your answser.");
+                    session.send("I am sorry, i did not understand your answser... Please tell me which one do you use more..like internet/tv/phone...");
                     //session.replaceDialog("/showOffer");
                 }
             });
