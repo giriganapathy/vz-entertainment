@@ -251,7 +251,7 @@ bot.add("/showOffer", [
             
         }
         else {
-            session.send("Ok. Thank you!");            
+            session.send("Ok. Thank you!\n\nYou can tell your usage agan please!");            
         }
     }
 ]);
