@@ -230,7 +230,7 @@ bot.add("/showOffer", [
         delete session.userData.userNameReceivedFlag;
         delete session.userData.nameAlreadyAsked;
         delete session.userData.name;
-        delete delete session.userData.selectedOffer;
+        delete session.userData.selectedOffer;
         delete session.userData.zipCode; 
         delete session.userData.serviceAvailable;         
     }
