@@ -225,6 +225,13 @@ bot.add("/showOffer", [
         else {
             session.send("Ok no problem.");            
         }
+        
+        delete session.userData.userNameReceivedFlag;
+        delete session.userData.nameAlreadyAsked;
+        delete session.userData.name;
+        delete session.userData.selectedOffer;
+        delete session.userData.zipCode; 
+        delete session.userData.serviceAvailable;         
         session.endDialog();
     }
 ]);
