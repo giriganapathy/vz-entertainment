@@ -227,20 +227,32 @@ bot.add("/showOffer", [
     },
     function (session, results) {
         if (results.response) {
-            session.send("Please click the Terms of Service Page.");            
+            //session.send("Please click the Terms of Service Page.");            
+            var captionText = "Please click the Terms of Service Page.\n";
+            var reply = new builder.Message()
+                .setText(session, captionText)
+                .addAttachment({
+                    text: "Terms of Service",
+                    title: "Terms of Service",
+                    titleLink: "http://www.verizon.com/about/terms-conditions/overview",
+                    contentType: "image/jpeg",
+                    contentUrl: "http://www.verizon.com/about/sites/default/files/terms-of-service.png"                                    
+                });
+                //session.send("50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo");
+            session.send(reply);
+            
+            delete session.userData.userNameReceivedFlag;
+            delete session.userData.nameAlreadyAsked;
+            delete session.userData.name;
+            delete session.userData.selectedOffer;
+            delete session.userData.zipCode; 
+            delete session.userData.serviceAvailable;     
+            session.endDialog();
+            
         }
         else {
-            session.send("Ok no problem.");            
+            session.send("Ok. Thank you!");            
         }
-        
-        
-        delete session.userData.userNameReceivedFlag;
-        delete session.userData.nameAlreadyAsked;
-        delete session.userData.name;
-        delete session.userData.selectedOffer;
-        delete session.userData.zipCode; 
-        delete session.userData.serviceAvailable;     
-        session.endDialog();
     }
 ]);
 
