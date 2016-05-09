@@ -83,6 +83,12 @@ bot.add("/showOffer", [
         }
         else {
             session.send("ok. no problem., Thanks for checking with me. bye");
+            delete session.userData.userNameReceivedFlag;
+            delete session.userData.nameAlreadyAsked;
+            delete session.userData.name;
+            delete session.userData.selectedOffer;
+            delete session.userData.zipCode; 
+            delete session.userData.serviceAvailable;                 
             session.endDialog();
         }
     },
@@ -140,7 +146,8 @@ bot.add("/showOffer", [
         }
         else {
             if (!session.userData.serviceAvailable) {
-                session.send("Sorry! " + session.userData.selectedOffer + " is unavailable in your address with the zip code:" + session.userData.zipCode);
+                session.send("Sorry! " + session.userData.selectedOffer + " is unavailable in your address with the zip code:" + session.userData.zipCode + "\nPlease try again with different address and zip code!");
+                delete session.userData.zipCode
             }
             else {
                 next({ response: session.message.text });
