@@ -177,7 +177,7 @@ bot.add("/showOffer", [
                                     title: session.userData.selectedOffer + " offer for TV",
                                     titleLink: "http://www.verizon.com/home/fiostv/",
                                     contentType: "image/jpeg",
-                                    contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/mob_ocw_ftp_ofr2_0403.png"                                    
+                                    contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/tv-internet-phone.png"                                    
                                 });
                                 //session.send("50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo");
                             session.send(reply);
@@ -192,7 +192,7 @@ bot.add("/showOffer", [
                                     title: session.userData.selectedOffer + " offer for Internet",
                                     titleLink: "http://www.verizon.com/home/fios-fastest-internet/",
                                     contentType: "image/jpeg",
-                                    contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/mob_ocw_ftp_ofr2_0403.png"                                    
+                                    contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/tv-internet-phone.png"                                    
                                 });
                             //session.send("50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo");
                             session.send(reply);
@@ -208,7 +208,7 @@ bot.add("/showOffer", [
                                     title: session.userData.selectedOffer + " offer for Phone",
                                     titleLink: "http://www.verizon.com/home/fios-fastest-internet/",
                                     contentType: "image/jpeg",
-                                    contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/mob_ocw_ftp_ofr2_0403.png"
+                                    contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/tv-internet-phone.png"
                                 });
                             //session.send("50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo");
                             session.send(reply);
