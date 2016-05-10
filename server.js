@@ -52,14 +52,10 @@ bot.add("/userProfile", [
                 session.beginDialog("/showOffer");
             }
             else {
-                if(session.message.text.length > 3) {
-                   session.userData.name = session.message.text;
-                   session.beginDialog("/showOffer");
-                }
-                else {
-                  session.send("I am sorry, i did not understand your answser. Please provide your name again.");
-                  session.replaceDialog("/userProfile");
-                }
+               //session.send("I am sorry, i did not understand your answser. Please provide your name again.");
+               //session.replaceDialog("/userProfile");
+                session.userData.name = session.message.text;
+                session.beginDialog("/showOffer");
             }
         });
     }
