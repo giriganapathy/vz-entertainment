@@ -170,7 +170,7 @@ bot.add("/showOffer", [
                     switch (entity.entity) {
                         case "tv":
                             var captionText = "We have found a perfect offer for you. Please check this.\n[50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo](http://www.verizon.com/home/fiostv/)";
-                            var newText = "We have found a perfect offer for you. Please check this.\n ![](http://www.verizon.com/cs/groups/public/documents/adacct/tv-internet-phone.png =100x100) [50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo](http://www.verizon.com/home/fiostv/)";
+                            //var newText = "We have found a perfect offer for you. Please check this.\n ![](http://www.verizon.com/cs/groups/public/documents/adacct/tv-internet-phone.png =100x100) [50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo](http://www.verizon.com/home/fiostv/)";
                             
                             var reply = new builder.Message()
                                 .setText(session, captionText)
@@ -182,7 +182,7 @@ bot.add("/showOffer", [
                                     contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/tv-internet-phone.png"                                    
                                 });
                                 //session.send("50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo");
-                            session.send(newText);
+                            session.send(reply);
                             builder.Prompts.confirm(session, "Do you like to proceed " + session.userData.name + "?\nPlease confirm." );
                             break;
                         case "internet":                            
