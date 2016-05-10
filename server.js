@@ -53,8 +53,8 @@ bot.add("/userProfile", [
                 session.beginDialog("/showOffer");
             }
             else {
-               //session.send("I am sorry, i did not understand your answser. Please provide your name again.");
-               //session.replaceDialog("/userProfile");
+                //session.send("I am sorry, i did not understand your answser. Please provide your name again.");
+                //session.replaceDialog("/userProfile");
                 session.userData.name = session.message.text;
                 session.beginDialog("/showOffer");
             }
@@ -80,7 +80,7 @@ bot.add("/", [
             if (!session.userData.selectedOffer) {
                 session.userData.selectedOffer = "FiOS Triple Play";
                 builder.Prompts.text(session, "I appreciate your interest in  " + session.userData.selectedOffer + ". \n\n" +
-                    "I would be glad to help you with available package and prices associated with it.\n\n" + 
+                    "I would be glad to help you with available package and prices associated with it.\n\n" +
                     "May I have the address, including zip code, so that I can check service availability and pricing for your home?");
             }
             else {
@@ -93,8 +93,8 @@ bot.add("/", [
             delete session.userData.nameAlreadyAsked;
             delete session.userData.name;
             delete session.userData.selectedOffer;
-            delete session.userData.zipCode; 
-            delete session.userData.serviceAvailable;                 
+            delete session.userData.zipCode;
+            delete session.userData.serviceAvailable;
             session.endDialog();
         }
     },
@@ -127,7 +127,7 @@ bot.add("/", [
                     var args = {
                         headers: { "Content-Type": "application/json" }
                     };
-                    
+
                     client.get("http://fiosserviceavailabilityapp.azurewebsites.net/zipcode/" + zipCode, args, function (data, response) {
                         // parsed response body as js object 
                         var result = data["status"];
@@ -135,8 +135,8 @@ bot.add("/", [
                             session.userData.serviceAvailable = true;
                             //var msg = "Great! " + session.userData.selectedOffer + " is available in your address with the zip code:" + zipCode + "\n\n" +
                             //    "To recommend best plan, can u tell me your usage..like do u use internet more or tv...etc.";
-                            var msg = "Great! Fios services are available at your location.\n\nLet me ask you few usage questions to help you select suitable Fios package.\n\n" + 
-                            "How many devices does your family connect to the Internet such as: cell phone, tablet, laptop, Smart TV, etc.? Also, do you do any gaming or stream any videos?"
+                            var msg = "Great! Fios services are available at your location.\n\nLet me ask you few usage questions to help you select suitable Fios package.\n\n" +
+                                "How many devices does your family connect to the Internet such as: cell phone, tablet, laptop, Smart TV, etc.? Also, do you do any gaming or stream any videos?"
                             builder.Prompts.text(session, msg);
                         }
                         else {
@@ -161,32 +161,36 @@ bot.add("/", [
             }
             else {
                 next({ response: session.message.text });
-            }            
+            }
         }
     },
-    function(session, results, next) {
-        if (results.response) {
+    function (session, results, next) {
+        if (results.response && !session.userData.numberOfDevices) {
             builder.LuisDialog.recognize(session.message.text, modelUri, function (err, intents, entities) {
                 if (null != err) {
                     session.endDialog("Unexpected error while parsing your answer. Try again after sometime!");
                     return;
                 }
-                var entity = builder.EntityRecognizer.findEntity(entities, 'device-count');
+                var entity = builder.EntityRecognizer.findEntity(entities, 'builtin.number');
                 if (null != entity) {
-                   var numberOfDevices = entity.entity;
-                   if(null != numberOfDevices) {
-                     var msg = "May I know your must have channels to help you select suitable Fios TV plan?";
-                     builder.Prompts.text(session, msg);
-                   }
-                   else {
-                    
-                   }
+                    var numberOfDevices = entity.entity;
+                    if (null != numberOfDevices) {
+                        session.userData.numberOfDevices = numberOfDevices;
+                        var msg = "May I know your must have channels to help you select suitable Fios TV plan?";
+                        builder.Prompts.text(session, msg);
+                    }
+                    else {
+                        session.send("I am sorry, i did not understand your answser... How many devices does your family connect to the Internet such as: cell phone, tablet, laptop, Smart TV, etc.?");
+                    }
+                }
+                else {
+                    session.send("I am sorry, i did not understand your answser... How many devices does your family connect to the Internet such as: cell phone, tablet, laptop, Smart TV, etc.?");
                 }
             });
         }
     },
-    function(session, results, next) {
-        if (results.response) {
+    function (session, results, next) {
+        if (results.response && !session.userData.selectedPlan) {
             builder.LuisDialog.recognize(session.message.text, modelUri, function (err, intents, entities) {
                 if (null != err) {
                     session.endDialog("Unexpected error while parsing your answer. Try again after sometime!");
@@ -194,120 +198,123 @@ bot.add("/", [
                 }
                 var entity = builder.EntityRecognizer.findEntity(entities, 'channel-type');
                 if (null != entity) {
-                   var channelType = entity.entity;
-                   if(null != channelType) {
-                      switch(channelType) {
-                       
-                          case "sports":
-                             session.userData.selectedPlan = "Custom TV Sports";
-                             session.userData.selectedChannel = "sports";
+                    var channelType = entity.entity;
+                    if (null != channelType) {
+                        switch (channelType) {
 
-                             var captionText = "Based on what we discussed, I'd recommend:\n[Custom TV - Sports & More Plan](http://www.verizon.com/home/fiostv/)\n" +
-                                               "Catch the best live sports plus lifestyle and entertainment channels for $64.99 mo plus taxes and other fees.";
-                             var reply = new builder.Message()
-                                 .setText(session, captionText)
-                                 .addAttachment({
-                                     text: "Custom TV - Sports & More Plan",
-                                     title: "",
-                                     titleLink: "",
-                                     contentType: "image/jpeg",
-                                     contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/customtv-sportsmore-7-logos.png"                                    
-                                 });
-                                 //session.send("50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo");
-                             session.send(reply);
-                             builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm." );
-                             break;
-                             
-                          case "entertainment":
-                             session.userData.selectedPlan = "Ultimate HD Plan";
-                             session.userData.selectedChannel = "entertainment";
-                           
-                             var captionText = "Based on what we discussed, I'd recommend:\n[Ultimate HD Plan](http://www.verizon.com/home/fiostv/)\n" +
-                                               "Our most popular package, for total entertainment junkies. Get access to all of the top sports and movies for $89.99 mo plus taxes and other fees.";
-                             var reply = new builder.Message()
-                                 .setText(session, captionText)
-                                 .addAttachment({
-                                     text: "Ultimate HD Plan",
-                                     title: "",
-                                     titleLink: "",
-                                     contentType: "image/jpeg",
-                                     contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/fios-ultimate-hd-channels-n.png"                                    
-                                 });
-                                 //session.send("50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo");
-                             session.send(reply);
-                             builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm." );
+                            case "sports":
+                                session.userData.selectedPlan = "Custom TV Sports";
+                                session.userData.selectedChannel = "sports";
 
-                             break;
-                          case "news":
-                             session.userData.selectedPlan = "Custom TV Essential Plan";
-                             session.userData.selectedChannel = "news";
-                           
-                             var captionText = "Based on what we discussed, I'd recommend:\n[Custom TV Essential Plan](http://www.verizon.com/home/fiostv/)\n" +
-                                               "Get a mix of your favorite original series, news and family channels for $64.99 mo plus taxes and other fees.";
-                             var reply = new builder.Message()
-                                 .setText(session, captionText)
-                                 .addAttachment({
-                                     text: "Custom TV Essential Plan",
-                                     title: "",
-                                     titleLink: "",
-                                     contentType: "image/jpeg",
-                                     contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/customtv-essentials-logos-4-16.png"                                    
-                                 });
-                             session.send(reply);
-                             builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm." );
-                             break;
-                          case "music" 
-                             session.userData.selectedPlan = "Preferred HD Plan";
-                             session.userData.selectedChannel = "music";
-                           
-                             var captionText = "Based on what we discussed, I'd recommend:\n[Preferred HD Plan](http://www.verizon.com/home/fiostv/)\n" +
-                                               "Watch exciting sports, music, comedy and travel – there’s never a dull moment for $74.99 mo plus taxes and other fees.";
-                             var reply = new builder.Message()
-                                 .setText(session, captionText)
-                                 .addAttachment({
-                                     text: "Preferred HD Plan",
-                                     title: "",
-                                     titleLink: "",
-                                     contentType: "image/jpeg",
-                                     contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/verizon-ftv-preferred-hd-logos.jpg"                                    
-                                 });
-                             session.send(reply);
-                             builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm." );
-                             break;
+                                var captionText = "Based on what we discussed, I'd recommend:\n[Custom TV - Sports & More Plan](http://www.verizon.com/home/fiostv/)\n" +
+                                    "Catch the best live sports plus lifestyle and entertainment channels for $64.99 mo plus taxes and other fees.";
+                                var reply = new builder.Message()
+                                    .setText(session, captionText)
+                                    .addAttachment({
+                                        text: "Custom TV - Sports & More Plan",
+                                        title: "",
+                                        titleLink: "",
+                                        contentType: "image/jpeg",
+                                        contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/customtv-sportsmore-7-logos.png"
+                                    });
+                                //session.send("50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo");
+                                session.send(reply);
+                                builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
+                                break;
 
-                          case "local":
-                             session.userData.selectedPlan = "FiOS TV Local Plan";
-                             session.userData.selectedChannel = "local";
-                           
-                             var captionText = "Based on what we discussed, I'd recommend:\n[FiOS TV Local Plan](http://www.verizon.com/home/fiostv/)\n" +
-                                               "Get your core local channels with great local news, entertainment, variety and more for $10.00 mo plus taxes and other fees.";
-                             var reply = new builder.Message()
-                                 .setText(session, captionText)
-                                 .addAttachment({
-                                     text: "FiOS TV Local Plan",
-                                     title: "",
-                                     titleLink: "",
-                                     contentType: "image/jpeg",
-                                     contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/verizon-ftv-local-hd.jpg"                                    
-                                 });
-                             session.send(reply);
-                             builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm." );
-                           
-                             break;
-                             
-                          default:
-                             session.send("I am sorry, i did not understand your answser... Please tell me your must have channels again.");
-                             break;
-                      }
-                   }
-                   else {
-                    
-                   }
+                            case "entertainment":
+                                session.userData.selectedPlan = "Ultimate HD Plan";
+                                session.userData.selectedChannel = "entertainment";
+
+                                var captionText = "Based on what we discussed, I'd recommend:\n[Ultimate HD Plan](http://www.verizon.com/home/fiostv/)\n" +
+                                    "Our most popular package, for total entertainment junkies. Get access to all of the top sports and movies for $89.99 mo plus taxes and other fees.";
+                                var reply = new builder.Message()
+                                    .setText(session, captionText)
+                                    .addAttachment({
+                                        text: "Ultimate HD Plan",
+                                        title: "",
+                                        titleLink: "",
+                                        contentType: "image/jpeg",
+                                        contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/fios-ultimate-hd-channels-n.png"
+                                    });
+                                //session.send("50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo");
+                                session.send(reply);
+                                builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
+
+                                break;
+                            case "news":
+                                session.userData.selectedPlan = "Custom TV Essential Plan";
+                                session.userData.selectedChannel = "news";
+
+                                var captionText = "Based on what we discussed, I'd recommend:\n[Custom TV Essential Plan](http://www.verizon.com/home/fiostv/)\n" +
+                                    "Get a mix of your favorite original series, news and family channels for $64.99 mo plus taxes and other fees.";
+                                var reply = new builder.Message()
+                                    .setText(session, captionText)
+                                    .addAttachment({
+                                        text: "Custom TV Essential Plan",
+                                        title: "",
+                                        titleLink: "",
+                                        contentType: "image/jpeg",
+                                        contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/customtv-essentials-logos-4-16.png"
+                                    });
+                                session.send(reply);
+                                builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
+                                break;
+                            case "music":
+                                session.userData.selectedPlan = "Preferred HD Plan";
+                                session.userData.selectedChannel = "music";
+
+                                var captionText = "Based on what we discussed, I'd recommend:\n[Preferred HD Plan](http://www.verizon.com/home/fiostv/)\n" +
+                                    "Watch exciting sports, music, comedy and travel – there’s never a dull moment for $74.99 mo plus taxes and other fees.";
+                                var reply = new builder.Message()
+                                    .setText(session, captionText)
+                                    .addAttachment({
+                                        text: "Preferred HD Plan",
+                                        title: "",
+                                        titleLink: "",
+                                        contentType: "image/jpeg",
+                                        contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/verizon-ftv-preferred-hd-logos.jpg"
+                                    });
+                                session.send(reply);
+                                builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
+                                break;
+
+                            case "local":
+                                session.userData.selectedPlan = "FiOS TV Local Plan";
+                                session.userData.selectedChannel = "local";
+
+                                var captionText = "Based on what we discussed, I'd recommend:\n[FiOS TV Local Plan](http://www.verizon.com/home/fiostv/)\n" +
+                                    "Get your core local channels with great local news, entertainment, variety and more for $10.00 mo plus taxes and other fees.";
+                                var reply = new builder.Message()
+                                    .setText(session, captionText)
+                                    .addAttachment({
+                                        text: "FiOS TV Local Plan",
+                                        title: "",
+                                        titleLink: "",
+                                        contentType: "image/jpeg",
+                                        contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/verizon-ftv-local-hd.jpg"
+                                    });
+                                session.send(reply);
+                                builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
+
+                                break;
+
+                            default:
+                                session.send("I am sorry, i did not understand your answser... Please tell me your must have channels again.");
+                                break;
+                        }
+                    }
+                    else {
+                        session.send("I am sorry, i did not understand your answser... May I know your must have channels to help you select suitable Fios TV plan?");
+                    }
+                }
+                else {
+                    session.send("I am sorry, i did not understand your answser... May I know your must have channels to help you select suitable Fios TV plan?");
                 }
             });
         }
     },
-    
+
     /*function (session, results, next) {
         if (results.response) {
             builder.LuisDialog.recognize(session.message.text, modelUri, function (err, intents, entities) {
@@ -391,22 +398,26 @@ bot.add("/", [
                     title: "Terms of Service",
                     titleLink: "http://www.verizon.com/about/terms-conditions/overview",
                     contentType: "image/jpeg",
-                    contentUrl: "http://www.verizon.com/about/sites/default/files/terms-of-service.png"                                    
+                    contentUrl: "http://www.verizon.com/about/sites/default/files/terms-of-service.png"
                 });
-                //session.send("50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo");
+            //session.send("50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo");
             session.send(reply);
-            
+
             delete session.userData.userNameReceivedFlag;
             delete session.userData.nameAlreadyAsked;
             delete session.userData.name;
             delete session.userData.selectedOffer;
-            delete session.userData.zipCode; 
-            delete session.userData.serviceAvailable;     
+            delete session.userData.zipCode;
+            delete session.userData.serviceAvailable;
+            delete session.userData.numberOfDevices;
+            delete session.userData.selectedPlan;
+            delete session.userData.selectedChannel;
+
             session.endDialog();
-            
+
         }
         else {
-            session.send("Ok. Thank you!\n\nYou can tell your usage again please!");            
+            session.send("Ok. Thank you!\n\nYou can tell your usage again please!");
         }
     }
 ]);
