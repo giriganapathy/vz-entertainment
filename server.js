@@ -228,7 +228,7 @@ bot.add("/showOffer", [
     function (session, results) {
         if (results.response) {
             //session.send("Please click the Terms of Service Page.");            
-            var captionText = "Please click the <a target='_new' href='http://www.verizon.com/about/terms-conditions/overview'>Terms of Service</a> Page.\n";
+            var captionText = "Please click the [Terms of Service](http://www.verizon.com/about/terms-conditions/overview) Page.\n";
             var reply = new builder.Message()
                 .setText(session, captionText)
                 .addAttachment({
