@@ -74,7 +74,7 @@ bot.add("/showOffer", [
     },
     function (session, results, next) {
         if (true === results.response) {
-            if (null == session.userData.selectedOffer) {
+            if (!session.userData.selectedOffer) {
                 session.userData.selectedOffer = "FiOS Triple Play";
                 builder.Prompts.text(session, "Thanks for showing interest on " + session.userData.selectedOffer + ". \n" +
                     "To check whether the service is available in your location, can u please tell me your address with zip code.");
