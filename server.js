@@ -188,6 +188,9 @@ bot.add("/", [
                 }
             });
         }
+        else {
+            next({ response: session.message.text });
+        }
     },
     function (session, results, next) {
         if (results.response && !session.userData.selectedPlan) {
