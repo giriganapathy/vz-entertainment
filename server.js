@@ -69,7 +69,7 @@ bot.add("/", [
     function (session, args, next) {
         if (!session.userData.selectedOffer) {
             //builder.Prompts.confirm(session, "Hello " + session.userData.name + "! Are you interested in " + currentOffer + " Offer?");
-            builder.Prompts.confirm(session, "Hi!" Are you interested in " + currentOffer + " Offer?");
+            builder.Prompts.confirm(session, "Hi! Are you interested in " + currentOffer + " Offer?");
         }
         else {
             next({ response: true });
