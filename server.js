@@ -193,7 +193,7 @@ bot.add("/showOffer", [
                                 });
                             //session.send("50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo");
                             session.send(reply);
-                            builder.Prompts.confirm(session, + "Do you like to proceed?\nPlease confirm " + session.userData.name);
+                            builder.Prompts.confirm(session, "Do you like to proceed " + session.userData.name + "?\nPlease confirm." );
                             break;
 
                         case "phone":
@@ -209,7 +209,7 @@ bot.add("/showOffer", [
                                 });
                             //session.send("50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo");
                             session.send(reply);
-                            builder.Prompts.confirm(session, "Do you like to proceed?\nPlease confirm " + session.userData.name);
+                            builder.Prompts.confirm(session, "Do you like to proceed " + session.userData.name + "?\nPlease confirm." );
                             break;
 
                         default:
