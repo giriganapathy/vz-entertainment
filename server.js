@@ -169,7 +169,7 @@ bot.add("/showOffer", [
                 if (null != entity) {
                     switch (entity.entity) {
                         case "tv":
-                            var captionText = "We have found a perfect offer for you. Please check this.\n";
+                            var captionText = "We have found a perfect offer for you. Please check this.\n[50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo](http://www.verizon.com/home/fiostv/)";
                             var reply = new builder.Message()
                                 .setText(session, captionText)
                                 .addAttachment({
@@ -184,7 +184,7 @@ bot.add("/showOffer", [
                             builder.Prompts.confirm(session, "Do you like to proceed " + session.userData.name + "?\nPlease confirm." );
                             break;
                         case "internet":                            
-                            var captionText = "We have found a perfect offer for you. Please check this.\n";
+                            var captionText = "We have found a perfect offer for you. Please check this.\n[150/150 Mbps Internet + Custom TV + Phone starting at $89.99/mo](http://www.verizon.com/home/fios-fastest-internet/)";
                             var reply = new builder.Message()
                                 .setText(session, captionText)
                                 .addAttachment({
@@ -200,7 +200,7 @@ bot.add("/showOffer", [
                             break;
 
                         case "phone":
-                            var captionText = "We have found a perfect offer for you. Please check this.\n";
+                            var captionText = "We have found a perfect offer for you. Please check this.\n[100/100 Mbps Internet + Custom TV + Phone starting at $69.99/mo](http://www.verizon.com/home/fios-fastest-internet/)";
                             var reply = new builder.Message()
                                 .setText(session, captionText)
                                 .addAttachment({
