@@ -134,7 +134,8 @@ bot.add("/showOffer", [
                         }
                         else {
                             session.userData.serviceAvailable = false;
-                            session.send("Sorry! " + session.userData.selectedOffer + " is unavailable in your address with the zip code:" + zipCode);
+                            session.send("Sorry! " + session.userData.selectedOffer + " is unavailable in your address with the zip code:" + session.userData.zipCode + "\nPlease try again with different address and zip code!");
+                            delete session.userData.zipCode
                         }
                     });
                 }
