@@ -309,10 +309,12 @@ bot.add("/", [
                     }
                     else {
                         session.send("I am sorry, i did not understand your answser... May I know your must have channels to help you select suitable Fios TV plan?");
+                        delete session.userData.selectedPlan;
                     }
                 }
                 else {
                     session.send("I am sorry, i did not understand your answser... May I know your must have channels to help you select suitable Fios TV plan?");
+                    delete session.userData.selectedPlan;
                 }
             });
         }
@@ -421,6 +423,7 @@ bot.add("/", [
         }
         else {
             session.send("Ok. Thank you!\n\nYou can tell your usage again please!");
+            delete session.userData.selectedPlan;
         }
     }
 ]);
