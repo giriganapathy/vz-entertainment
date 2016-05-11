@@ -180,6 +180,7 @@ bot.add("/", [
 
                         //Show internet plan details, based on the number of devices and gaming.
                         if (numberOfDevices < 4) {
+                            session.userData.internetPlanShown = true;
                             session.userData.selectedPlan = "50/50 Mbps Internet + Custom TV + Phone";
                             session.userData.planPrice = 79.99;
                             var captionText = "Based on your needs, I would recommend you for [50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo](http://www.verizon.com/home/fiostv/)";
@@ -198,6 +199,7 @@ bot.add("/", [
                             }, 50);
                         }
                         else {
+                            session.userData.internetPlanShown = true;
                             session.userData.selectedPlan = "150/150 Mbps Internet + Custom TV + Phone";
                             session.userData.planPrice = 89.99;
                             var captionText = "We have found a perfect offer for you. Please check this.\n[150/150 Mbps Internet + Custom TV + Phone starting at $89.99/mo](http://www.verizon.com/home/fios-fastest-internet/)";
@@ -217,7 +219,7 @@ bot.add("/", [
                             }, 50);
 
                         }
-                        session.userData.internetPlanShown = true;
+                        
                         //ends here...
 
                         //var msg = "May I know your must have channels to help you select suitable Fios TV plan?";
@@ -299,7 +301,7 @@ bot.add("/", [
                                     builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
                                 }, 50);
 
-                                
+
                                 break;
 
                             case "entertainment":
@@ -345,7 +347,7 @@ bot.add("/", [
                                 setTimeout(function () {
                                     builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
                                 }, 50);
-                                
+
                                 break;
                             case "music":
                                 session.userData.selectedPlan = "Preferred HD Plan";
@@ -408,10 +410,13 @@ bot.add("/", [
                 }
             });
         }
+        else {
+            next({ response: session.message.text });
+        }
     },
     function (session, results, next) {
-        if (results.response) {
-            //Check whether the customer already selected the plan.
+        if (results.response && !session.userData.numberOfTVAsked) {
+            session.userData.numberOfTVAsked = true;
             if (null != session.userData.orderBucket) {
                 var planName = session.userData.selectedPlan;
                 var plan = {
@@ -420,7 +425,48 @@ bot.add("/", [
                     "price": session.userData.planPrice
                 }
                 session.userData.orderBucket.push(plan);
-
+                session.send("To help you with the total price, may i know how many TVs you would like to connect with FiOS TV Service?");
+            }
+        }
+        else if (!session.userData.numberOfTVAsked) {
+            delete session.userData.selectedPlan;
+            session.send("May I know your must have channels to help you select suitable Fios TV plan?");
+        }
+        else {
+            next({ response: session.message.text });
+        }
+    },
+    
+    function (session, results, next) {
+        if (results.response) {
+            builder.LuisDialog.recognize(session.message.text, modelUri, function (err, intents, entities) {
+                if (null != err) {
+                    session.endDialog("Unexpected error while parsing your answer. Try again after sometime!");
+                    return;
+                }
+                var entity = builder.EntityRecognizer.findEntity(entities, 'builtin.number');
+                if (null != entity) {
+                    var numberOfTV = entity.entity;
+                    if (null != numberOfTV) {
+                        session.userData.numberOfTV = numberOfTV;
+                    }
+                    else {
+                        session.send("I am sorry, i did not understand your answser... May i know how many TVs you would like to connect with FiOS TV Service?");
+                    }
+                }
+                else {
+                    session.send("I am sorry, i did not understand your answser... May i know how many TVs you would like to connect with FiOS TV Service?");
+                }
+            });
+        }
+        else {
+            session.send("I am sorry, i did not understand your answser... May i know how many TVs you would like to connect with FiOS TV Service?");
+        }
+    },
+    function (session, results, next) {
+        if (results.response) {
+            //Check whether the customer already selected the plan.
+            if (null != session.userData.orderBucket) {
                 //Show the total price of the selected plans.
                 var totalPrice = 0;
                 var orderDetails = "Your order details:\n";
@@ -429,14 +475,19 @@ bot.add("/", [
                     orderDetails = orderDetails + "\n" + (idx + 1) + ":" + objPlan.plan + "<-->" + objPlan.price;
                     totalPrice = totalPrice + objPlan.price;
                 }
+                var numberOfTV = session.userData.numberOfTV;
+                var perEquipmentCharge = 12;
+                var totalEquipmentCharges = (numberOfTV * perEquipmentCharge);
+                var totalBillablePrice = totalPrice + totalEquipmentCharges;
                 orderDetails = orderDetails + "\n";
-                orderDetails = orderDetails + "Your total order value is:" + totalPrice;
+                orderDetails = orderDetails + "The cost of equipment for 1 Set Top Box is: $" + perEquipmentCharge + "/mo.\n";
+                orderDetails = orderDetails + "The number of TV you have is: " + numberOfTV + "\n";
+                orderDetails = orderDetails + "Total Equipment Charges (no. of TV X Cost of Equipment): = (" + numberOfTV + " X " + perEquipmentCharge + ") = " + totalEquipmentCharges +  "\n";
+                orderDetails = orderDetails + "Your total order value is Total Plan Price + Total Equipment Charges =>" + "(" + totalPrice + "+" + totalEquipmentCharges + ") => " + totalBillablePrice + "\n";
                 session.send(orderDetails);
                 setTimeout(function () {
                     builder.Prompts.confirm(session, "Do you like to place this order now?\nPlease confirm.");
                 }, 50);
-
-                
             }
         }
         else {
@@ -444,6 +495,7 @@ bot.add("/", [
             session.send("May I know your must have channels to help you select suitable Fios TV plan?");
         }
     },
+
     function (session, results, next) {
         if (results.response) {
             var captionText = "Please click the [Terms of Service](http://www.verizon.com/about/terms-conditions/overview) Page.\n";
@@ -469,6 +521,7 @@ bot.add("/", [
             delete session.userData.selectedPlan;
             delete session.userData.selectedChannel;
             delete session.userData.planPrice;
+            delete session.userData.numberOfTVAsked;
 
             session.userData.orderBucket.clear();
 
