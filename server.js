@@ -67,8 +67,8 @@ bot.add("/userProfile", [
 //bot.add("/showOffer", [
 bot.add("/", [
     function (session, args, next) {
-        session.userData.orderBucket = [];
         if (!session.userData.selectedOffer) {
+            session.userData.orderBucket = [];
             //builder.Prompts.confirm(session, "Hello " + session.userData.name + "! Are you interested in " + currentOffer + " Offer?");
             builder.Prompts.confirm(session, "Hi! Are you interested in " + currentOffer + " Offer?");
         }
