@@ -340,6 +340,7 @@ bot.add("/", [
             );
             
             //Show the total price of the selected plans.
+            var orderDetails = "";
             for(var idx=0; idx <  session.userData.orderBucket.length; idx++) {
                 var plan =  session.userData.orderBucket[idx];
                 orderDetails = orderDetails + "\n" + plan.plan + "<-->" + plan.price;
