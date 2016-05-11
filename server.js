@@ -415,7 +415,7 @@ bot.add("/", [
         }
     },
     function (session, results, next) {
-        if (results.response && !session.userData.numberOfTVAsked) {
+        if (results.response && !session.userData.numberOfTVAsked && true == session.userData.selectedPlan) {
             session.userData.numberOfTVAsked = true;
             if (null != session.userData.orderBucket) {
                 var planName = session.userData.selectedPlan;
