@@ -208,6 +208,7 @@ bot.add("/", [
                             case "sports":
                                 session.userData.selectedPlan = "Custom TV Sports";
                                 session.userData.selectedChannel = "sports";
+                                session.userData.planPrice = 64.99;
 
                                 var captionText = "Based on what we discussed, I'd recommend:\n[Custom TV - Sports & More Plan](http://www.verizon.com/home/fiostv/)\n" +
                                     "Catch the best live sports plus lifestyle and entertainment channels for $64.99 mo plus taxes and other fees.";
@@ -228,7 +229,8 @@ bot.add("/", [
                             case "entertainment":
                                 session.userData.selectedPlan = "Ultimate HD Plan";
                                 session.userData.selectedChannel = "entertainment";
-
+                                session.userData.planPrice = 89.99;
+                                
                                 var captionText = "Based on what we discussed, I'd recommend:\n[Ultimate HD Plan](http://www.verizon.com/home/fiostv/)\n" +
                                     "Our most popular package, for total entertainment junkies. Get access to all of the top sports and movies for $89.99 mo plus taxes and other fees.";
                                 var reply = new builder.Message()
@@ -248,7 +250,8 @@ bot.add("/", [
                             case "news":
                                 session.userData.selectedPlan = "Custom TV Essential Plan";
                                 session.userData.selectedChannel = "news";
-
+                                session.userData.planPrice = 64.99;
+                                
                                 var captionText = "Based on what we discussed, I'd recommend:\n[Custom TV Essential Plan](http://www.verizon.com/home/fiostv/)\n" +
                                     "Get a mix of your favorite original series, news and family channels for $64.99 mo plus taxes and other fees.";
                                 var reply = new builder.Message()
@@ -266,7 +269,8 @@ bot.add("/", [
                             case "music":
                                 session.userData.selectedPlan = "Preferred HD Plan";
                                 session.userData.selectedChannel = "music";
-
+                                session.userData.planPrice = 74.99;
+                                
                                 var captionText = "Based on what we discussed, I'd recommend:\n[Preferred HD Plan](http://www.verizon.com/home/fiostv/)\n" +
                                     "Watch exciting sports, music, comedy and travel – there’s never a dull moment for $74.99 mo plus taxes and other fees.";
                                 var reply = new builder.Message()
@@ -285,7 +289,8 @@ bot.add("/", [
                             case "local":
                                 session.userData.selectedPlan = "FiOS TV Local Plan";
                                 session.userData.selectedChannel = "local";
-
+                                session.userData.planPrice = 10.00;
+                                
                                 var captionText = "Based on what we discussed, I'd recommend:\n[FiOS TV Local Plan](http://www.verizon.com/home/fiostv/)\n" +
                                     "Get your core local channels with great local news, entertainment, variety and more for $10.00 mo plus taxes and other fees.";
                                 var reply = new builder.Message()
@@ -319,7 +324,34 @@ bot.add("/", [
             });
         }
     },
-
+   function (session, results, next) {
+     if (results.response) {
+        //Check whether the customer already selected the plan.
+        if(null != session.userData.orderBucket[session.userData.selectedPlan]) {
+           session.userData.orderBucket.push(
+               {
+                   session.userData.selectedPlan : 
+                                                    {
+                                                     "plan": session.userData.selectedPlan,
+                                                     "channel": session.userData.selectedChannel,
+                                                     "price":session.userData.planPrice
+                                                    }
+               }
+            );
+            
+            //Show the total price of the selected plans.
+            for(var idx=0; idx <  session.userData.orderBucket.length; idx++) {
+                var plan =  session.userData.orderBucket[idx];
+                orderDetails = orderDetails + "\n" + plan.plan + "<-->" + plan.price;
+            }
+            
+        }
+     }
+     else {
+      
+      
+     }
+   },
     /*function (session, results, next) {
         if (results.response) {
             builder.LuisDialog.recognize(session.message.text, modelUri, function (err, intents, entities) {
