@@ -449,6 +449,7 @@ bot.add("/", [
                     var numberOfTV = entity.entity;
                     if (null != numberOfTV) {
                         session.userData.numberOfTV = numberOfTV;
+                        next({ response: numberOfTV });
                     }
                     else {
                         session.send("I am sorry, i did not understand your answser... May i know how many TVs you would like to connect with FiOS TV Service?");
