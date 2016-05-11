@@ -67,8 +67,8 @@ bot.add("/userProfile", [
 //bot.add("/showOffer", [
 bot.add("/", [
     function (session, args, next) {
+        session.userData.orderBucket = [];
         if (!session.userData.selectedOffer) {
-            session.userData.orderBucket = [];
             //builder.Prompts.confirm(session, "Hello " + session.userData.name + "! Are you interested in " + currentOffer + " Offer?");
             builder.Prompts.confirm(session, "Hi! Are you interested in " + currentOffer + " Offer?");
         }
@@ -177,8 +177,46 @@ bot.add("/", [
                     var numberOfDevices = entity.entity;
                     if (null != numberOfDevices) {
                         session.userData.numberOfDevices = numberOfDevices;
-                        var msg = "May I know your must have channels to help you select suitable Fios TV plan?";
-                        builder.Prompts.text(session, msg);
+
+                        //Show internet plan details, based on the number of devices and gaming.
+                        if (numberOfDevices < 4) {
+                            session.userData.selectedPlan = "50/50 Mbps Internet + Custom TV + Phone";
+                            session.userData.planPrice = 79.99;
+                            var captionText = "Based on your needs, I would recommend you for [50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo](http://www.verizon.com/home/fiostv/)";
+                            var reply = new builder.Message()
+                                .setText(session, captionText)
+                                .addAttachment({
+                                    text: "50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo",
+                                    title: session.userData.selectedOffer + " offer for TV",
+                                    titleLink: "http://www.verizon.com/home/fiostv/",
+                                    contentType: "image/jpeg",
+                                    contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/tv-internet-phone.png"
+                                });
+                            session.send(reply);
+                            builder.Prompts.confirm(session, "Do you like to proceed " + session.userData.name + "?\nPlease confirm.");
+                        }
+                        else {
+                            session.userData.selectedPlan = "150/150 Mbps Internet + Custom TV + Phone";
+                            session.userData.planPrice = 89.99;
+                            var captionText = "We have found a perfect offer for you. Please check this.\n[150/150 Mbps Internet + Custom TV + Phone starting at $89.99/mo](http://www.verizon.com/home/fios-fastest-internet/)";
+                            var reply = new builder.Message()
+                                .setText(session, captionText)
+                                .addAttachment({
+                                    text: "150/150 Mbps Internet + Custom TV + Phone starting at $89.99/mo",
+                                    title: session.userData.selectedOffer + " offer for Internet",
+                                    titleLink: "http://www.verizon.com/home/fios-fastest-internet/",
+                                    contentType: "image/jpeg",
+                                    contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/tv-internet-phone.png"
+                                });
+                            //session.send("50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo");
+                            session.send(reply);
+                            builder.Prompts.confirm(session, "Do you like to proceed " + session.userData.name + "?\nPlease confirm.");
+                        }
+                        session.userData.internetPlanShown = true;
+                        //ends here...
+
+                        //var msg = "May I know your must have channels to help you select suitable Fios TV plan?";
+                        //builder.Prompts.text(session, msg);
                     }
                     else {
                         session.send("I am sorry, i did not understand your answser... How many devices does your family connect to the Internet such as: cell phone, tablet, laptop, Smart TV, etc.?");
@@ -188,6 +226,34 @@ bot.add("/", [
                     session.send("I am sorry, i did not understand your answser... How many devices does your family connect to the Internet such as: cell phone, tablet, laptop, Smart TV, etc.?");
                 }
             });
+        }
+        else {
+            next({ response: session.message.text });
+        }
+    },
+    function (session, results, next) {
+        if (results.response && true == session.userData.internetPlanShown) {
+            session.userData.internetPlanShown = false;
+            if (null != session.userData.orderBucket) {
+                var planName = session.userData.selectedPlan;
+                var plan = {
+                    "plan": session.userData.selectedPlan,
+                    "channel": "",
+                    "price": session.userData.planPrice
+                }
+                session.userData.orderBucket.push(plan);
+
+                delete session.userData.selectedPlan;
+                delete session.userData.planPrice;
+
+                var msg = "May I know your must have channels to help you select suitable Fios TV plan?";
+                builder.Prompts.text(session, msg);
+
+            }
+        }
+        else if (false == results.response) {
+            var msg = "May I know your must have channels to help you select suitable Fios TV plan?";
+            builder.Prompts.text(session, msg);
         }
         else {
             next({ response: session.message.text });
@@ -342,12 +408,13 @@ bot.add("/", [
                 var orderDetails = "Your order details:\n";
                 for (var idx = 0; idx < session.userData.orderBucket.length; idx++) {
                     var objPlan = session.userData.orderBucket[idx];
-                    orderDetails = orderDetails + "\n" + idx + ":" + objPlan.plan + "<-->" + objPlan.price;
+                    orderDetails = orderDetails + "\n" + (idx+1) + ":" + objPlan.plan + "<-->" + objPlan.price;
                     totalPrice = totalPrice + objPlan.price;
                 }
                 orderDetails = orderDetails + "\n";
                 orderDetails = orderDetails + "Your total order value is:" + totalPrice; 
                 session.send(orderDetails);
+
             }
             else {
 
