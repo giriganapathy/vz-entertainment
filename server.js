@@ -193,7 +193,9 @@ bot.add("/", [
                                     contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/tv-internet-phone.png"
                                 });
                             session.send(reply);
-                            builder.Prompts.confirm(session, "Do you like to proceed " + session.userData.name + "?\nPlease confirm.");
+                            setTimeout(function () {
+                                builder.Prompts.confirm(session, "Do you like to proceed?\nPlease confirm.");
+                            }, 50);
                         }
                         else {
                             session.userData.selectedPlan = "150/150 Mbps Internet + Custom TV + Phone";
@@ -210,7 +212,10 @@ bot.add("/", [
                                 });
                             //session.send("50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo");
                             session.send(reply);
-                            builder.Prompts.confirm(session, "Do you like to proceed " + session.userData.name + "?\nPlease confirm.");
+                            setTimeout(function () {
+                                builder.Prompts.confirm(session, "Do you like to proceed?\nPlease confirm.");
+                            }, 50);
+
                         }
                         session.userData.internetPlanShown = true;
                         //ends here...
@@ -290,7 +295,11 @@ bot.add("/", [
                                     });
                                 //session.send("50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo");
                                 session.send(reply);
-                                builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
+                                setTimeout(function () {
+                                    builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
+                                }, 50);
+
+                                
                                 break;
 
                             case "entertainment":
@@ -311,7 +320,9 @@ bot.add("/", [
                                     });
                                 //session.send("50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo");
                                 session.send(reply);
-                                builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
+                                setTimeout(function () {
+                                    builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
+                                }, 50);
 
                                 break;
                             case "news":
@@ -331,7 +342,10 @@ bot.add("/", [
                                         contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/customtv-essentials-logos-4-16.png"
                                     });
                                 session.send(reply);
-                                builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
+                                setTimeout(function () {
+                                    builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
+                                }, 50);
+                                
                                 break;
                             case "music":
                                 session.userData.selectedPlan = "Preferred HD Plan";
@@ -350,7 +364,9 @@ bot.add("/", [
                                         contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/verizon-ftv-preferred-hd-logos.jpg"
                                     });
                                 session.send(reply);
-                                builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
+                                setTimeout(function () {
+                                    builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
+                                }, 50);
                                 break;
 
                             case "local":
@@ -370,7 +386,9 @@ bot.add("/", [
                                         contentUrl: "http://www.verizon.com/cs/groups/public/documents/adacct/verizon-ftv-local-hd.jpg"
                                     });
                                 session.send(reply);
-                                builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
+                                setTimeout(function () {
+                                    builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
+                                }, 50);
 
                                 break;
 
@@ -397,9 +415,9 @@ bot.add("/", [
             if (null != session.userData.orderBucket) {
                 var planName = session.userData.selectedPlan;
                 var plan = {
-                        "plan": session.userData.selectedPlan,
-                        "channel": session.userData.selectedChannel,
-                        "price": session.userData.planPrice
+                    "plan": session.userData.selectedPlan,
+                    "channel": session.userData.selectedChannel,
+                    "price": session.userData.planPrice
                 }
                 session.userData.orderBucket.push(plan);
 
@@ -408,17 +426,58 @@ bot.add("/", [
                 var orderDetails = "Your order details:\n";
                 for (var idx = 0; idx < session.userData.orderBucket.length; idx++) {
                     var objPlan = session.userData.orderBucket[idx];
-                    orderDetails = orderDetails + "\n" + (idx+1) + ":" + objPlan.plan + "<-->" + objPlan.price;
+                    orderDetails = orderDetails + "\n" + (idx + 1) + ":" + objPlan.plan + "<-->" + objPlan.price;
                     totalPrice = totalPrice + objPlan.price;
                 }
                 orderDetails = orderDetails + "\n";
-                orderDetails = orderDetails + "Your total order value is:" + totalPrice; 
+                orderDetails = orderDetails + "Your total order value is:" + totalPrice;
                 session.send(orderDetails);
+                setTimeout(function () {
+                    builder.Prompts.confirm(session, "Do you like to place this order now?\nPlease confirm.");
+                }, 50);
 
+                
             }
-            else {
+        }
+        else {
+            delete session.userData.selectedPlan;
+            session.send("May I know your must have channels to help you select suitable Fios TV plan?");
+        }
+    },
+    function (session, results, next) {
+        if (results.response) {
+            var captionText = "Please click the [Terms of Service](http://www.verizon.com/about/terms-conditions/overview) Page.\n";
+            var reply = new builder.Message()
+                .setText(session, captionText)
+                .addAttachment({
+                    text: "Terms of Service",
+                    title: "Terms of Service",
+                    titleLink: "http://www.verizon.com/about/terms-conditions/overview",
+                    contentType: "image/jpeg",
+                    contentUrl: "http://www.verizon.com/about/sites/default/files/terms-of-service.png"
+                });
+            //session.send("50/50 Mbps Internet + Custom TV + Phone starting at $79.99/mo");
+            session.send(reply);
 
-            }
+            delete session.userData.userNameReceivedFlag;
+            delete session.userData.nameAlreadyAsked;
+            delete session.userData.name;
+            delete session.userData.selectedOffer;
+            delete session.userData.zipCode;
+            delete session.userData.serviceAvailable;
+            delete session.userData.numberOfDevices;
+            delete session.userData.selectedPlan;
+            delete session.userData.selectedChannel;
+            delete session.userData.planPrice;
+
+            session.userData.orderBucket.clear();
+
+            session.endDialog();
+
+        }
+        else {
+            delete session.userData.selectedPlan;
+            session.send("May I know your must have channels to help you select suitable Fios TV plan?");
         }
     },
 /*function (session, results, next) {
