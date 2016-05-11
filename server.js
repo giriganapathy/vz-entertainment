@@ -344,7 +344,7 @@ bot.add("/", [
                 var plan =  session.userData.orderBucket[idx];
                 orderDetails = orderDetails + "\n" + plan.plan + "<-->" + plan.price;
             }
-            
+            session.send(orderDetails);
         }
      }
      else {
