@@ -196,7 +196,7 @@ bot.add("/", [
                             session.send(reply);
                             setTimeout(function () {
                                 builder.Prompts.confirm(session, "Do you like to proceed?\nPlease confirm.");
-                            }, 50);
+                            }, 150);
                         }
                         else {
                             session.userData.internetPlanShown = true;
@@ -216,7 +216,7 @@ bot.add("/", [
                             session.send(reply);
                             setTimeout(function () {
                                 builder.Prompts.confirm(session, "Do you like to proceed?\nPlease confirm.");
-                            }, 50);
+                            }, 150);
 
                         }
                         
@@ -299,7 +299,7 @@ bot.add("/", [
                                 session.send(reply);
                                 setTimeout(function () {
                                     builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
-                                }, 50);
+                                }, 150);
 
 
                                 break;
@@ -324,7 +324,7 @@ bot.add("/", [
                                 session.send(reply);
                                 setTimeout(function () {
                                     builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
-                                }, 50);
+                                }, 150);
 
                                 break;
                             case "news":
@@ -346,7 +346,7 @@ bot.add("/", [
                                 session.send(reply);
                                 setTimeout(function () {
                                     builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
-                                }, 50);
+                                }, 150);
 
                                 break;
                             case "music":
@@ -368,7 +368,7 @@ bot.add("/", [
                                 session.send(reply);
                                 setTimeout(function () {
                                     builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
-                                }, 50);
+                                }, 150);
                                 break;
 
                             case "local":
@@ -390,7 +390,7 @@ bot.add("/", [
                                 session.send(reply);
                                 setTimeout(function () {
                                     builder.Prompts.confirm(session, "Do you like to proceed with the plan " + session.userData.selectedPlan + "?\nPlease confirm.");
-                                }, 50);
+                                }, 150);
 
                                 break;
 
@@ -488,7 +488,7 @@ bot.add("/", [
                 session.send(orderDetails);
                 setTimeout(function () {
                     builder.Prompts.confirm(session, "Do you like to place this order now?\nPlease confirm.");
-                }, 50);
+                }, 150);
             }
         }
         else {
