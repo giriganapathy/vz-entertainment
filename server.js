@@ -66,11 +66,11 @@ bot.add("/userProfile", [
 
 //bot.add("/showOffer", [
 bot.add("/", [
-    function (session, args, next) {
-        session.userData.orderBucket = [];
+    function (session, args, next) {       
         if (!session.userData.selectedOffer) {
             //builder.Prompts.confirm(session, "Hello " + session.userData.name + "! Are you interested in " + currentOffer + " Offer?");
             builder.Prompts.confirm(session, "Hi! Are you interested in " + currentOffer + " Offer?");
+            session.userData.orderBucket = [];
         }
         else {
             next({ response: true });
