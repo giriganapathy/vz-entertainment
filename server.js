@@ -1,4 +1,3 @@
-
 /*-----------------------------------------------------------------------------
 This is a sample Verizon Bot which helps the customer by prompting series of
 questions to understand the customer intents and helping them to assist
@@ -339,11 +338,15 @@ bot.add("/", [
                 session.userData.orderBucket.push(plan);
 
                 //Show the total price of the selected plans.
-                var orderDetails = "";
+                var totalPrice = 0;
+                var orderDetails = "Your order details:\n";
                 for (var idx = 0; idx < session.userData.orderBucket.length; idx++) {
                     var objPlan = session.userData.orderBucket[idx];
-                    orderDetails = orderDetails + "\n" + objPlan.plan + "<-->" + objPlan.price;
+                    orderDetails = orderDetails + "\n" + idx + ":" + objPlan.plan + "<-->" + objPlan.price;
+                    totalPrice = totalPrice + objPlan.price;
                 }
+                orderDetails = orderDetails + "\n";
+                orderDetails = orderDetails + "Your total order value is:" + totalPrice; 
                 session.send(orderDetails);
             }
             else {
@@ -470,3 +473,4 @@ server.post("/api/messages", bot.listen());
 server.listen(process.env.port, function () {
     console.log("%s listening to %s", server.name, server.url);
 });
+
