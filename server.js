@@ -136,7 +136,7 @@ bot.add("/", [
                             session.userData.serviceAvailable = true;
                             //var msg = "Great! " + session.userData.selectedOffer + " is available in your address with the zip code:" + zipCode + "\n\n" +
                             //    "To recommend best plan, can u tell me your usage..like do u use internet more or tv...etc.";
-                            var msg = "Great! Fios services are available at your location.\n\nLet me ask you few usage questions to help you select suitable Fios package.\n\n" +
+                            var msg = "Cool! Fios services are available at your location.\n\nLet me ask you few usage questions to help you select suitable Fios package.\n\n" +
                                 "How many devices does your family connect to the Internet such as: cell phone, tablet, laptop, Smart TV, etc.? Also, do you do any gaming or stream any videos?"
                             builder.Prompts.text(session, msg);
                         }
