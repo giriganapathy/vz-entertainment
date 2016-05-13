@@ -305,6 +305,7 @@ bot.add("/", [
                                 break;
 
                             case "entertainment":
+                            case "movie": 
                                 session.userData.selectedPlan = "Ultimate HD Plan";
                                 session.userData.selectedChannel = "entertainment";
                                 session.userData.planPrice = 89.99;
@@ -483,8 +484,8 @@ bot.add("/", [
                 orderDetails = orderDetails + "\n";
                 orderDetails = orderDetails + "The cost of equipment for 1 Set Top Box is: $" + perEquipmentCharge + "/mo.\n";
                 orderDetails = orderDetails + "The number of TV you have is: " + numberOfTV + "\n";
-                orderDetails = orderDetails + "Total Equipment Charges (no. of TV X Cost of Equipment): = (" + numberOfTV + " X " + perEquipmentCharge + ") = " + totalEquipmentCharges +  "\n";
-                orderDetails = orderDetails + "Your total order value is Total Plan Price + Total Equipment Charges =>" + "(" + totalPrice + "+" + totalEquipmentCharges + ") => " + totalBillablePrice + "\n";
+                orderDetails = orderDetails + "Total Equipment Charges (no. of TV X Cost of Equipment): = (" + numberOfTV + " * $" + perEquipmentCharge + ") = $" + totalEquipmentCharges +  "\n";
+                orderDetails = orderDetails + "Your total order value is Total Plan Price + Total Equipment Charges =>" + "($" + totalPrice + "+ $" + totalEquipmentCharges + ") => $" + totalBillablePrice + "\n";
                 session.send(orderDetails);
                 setTimeout(function () {
                     builder.Prompts.confirm(session, "Do you like to place this order now?\nPlease confirm.");
