@@ -285,7 +285,7 @@ bot.add("/", [
                                 session.userData.planPrice = 0;
 
                                 var captionText = "Based on what we discussed, I'd recommend:\n[Custom TV - Sports & More Plan](http://www.verizon.com/home/fiostv/)\n" +
-                                    "Catch the best live sports plus lifestyle and entertainment channels for $64.99 mo plus taxes and other fees.";
+                                    "Catch the best live sports plus lifestyle and entertainment channels.";
                                 var reply = new builder.Message()
                                     .setText(session, captionText)
                                     .addAttachment({
@@ -311,7 +311,7 @@ bot.add("/", [
                                 session.userData.planPrice = 45.00;
 
                                 var captionText = "Based on what we discussed, I'd recommend:\n[Ultimate HD Plan](http://www.verizon.com/home/fiostv/)\n" +
-                                    "Our most popular package, for total entertainment junkies. Get access to all of the top sports and movies for $89.99 mo plus taxes and other fees.";
+                                    "Our most popular package, for total entertainment junkies. Get access to all of the top sports and movies.";
                                 var reply = new builder.Message()
                                     .setText(session, captionText)
                                     .addAttachment({
@@ -334,7 +334,7 @@ bot.add("/", [
                                 session.userData.planPrice = 15.00;
 
                                 var captionText = "Based on what we discussed, I'd recommend:\n[Custom TV Essential Plan](http://www.verizon.com/home/fiostv/)\n" +
-                                    "Get a mix of your favorite original series, news and family channels for $64.99 mo plus taxes and other fees.";
+                                    "Get a mix of your favorite original series, news and family channels.";
                                 var reply = new builder.Message()
                                     .setText(session, captionText)
                                     .addAttachment({
@@ -356,7 +356,7 @@ bot.add("/", [
                                 session.userData.planPrice = 10.00;
 
                                 var captionText = "Based on what we discussed, I'd recommend:\n[Preferred HD Plan](http://www.verizon.com/home/fiostv/)\n" +
-                                    "Watch exciting sports, music, comedy and travel – there’s never a dull moment for $74.99 mo plus taxes and other fees.";
+                                    "Watch exciting sports, music, comedy and travel – there’s never a dull moment.";
                                 var reply = new builder.Message()
                                     .setText(session, captionText)
                                     .addAttachment({
@@ -378,7 +378,7 @@ bot.add("/", [
                                 session.userData.planPrice = 10.00;
 
                                 var captionText = "Based on what we discussed, I'd recommend:\n[FiOS TV Local Plan](http://www.verizon.com/home/fiostv/)\n" +
-                                    "Get your core local channels with great local news, entertainment, variety and more for $10.00 mo plus taxes and other fees.";
+                                    "Get your core local channels with great local news, entertainment, variety and more.";
                                 var reply = new builder.Message()
                                     .setText(session, captionText)
                                     .addAttachment({
