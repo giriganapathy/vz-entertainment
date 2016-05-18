@@ -282,7 +282,7 @@ bot.add("/", [
                             case "sports":
                                 session.userData.selectedPlan = "Custom TV Sports";
                                 session.userData.selectedChannel = "sports";
-                                session.userData.planPrice = 64.99;
+                                session.userData.planPrice = 0;
 
                                 var captionText = "Based on what we discussed, I'd recommend:\n[Custom TV - Sports & More Plan](http://www.verizon.com/home/fiostv/)\n" +
                                     "Catch the best live sports plus lifestyle and entertainment channels for $64.99 mo plus taxes and other fees.";
@@ -308,7 +308,7 @@ bot.add("/", [
                             case "movie": 
                                 session.userData.selectedPlan = "Ultimate HD Plan";
                                 session.userData.selectedChannel = "entertainment";
-                                session.userData.planPrice = 89.99;
+                                session.userData.planPrice = 45.00;
 
                                 var captionText = "Based on what we discussed, I'd recommend:\n[Ultimate HD Plan](http://www.verizon.com/home/fiostv/)\n" +
                                     "Our most popular package, for total entertainment junkies. Get access to all of the top sports and movies for $89.99 mo plus taxes and other fees.";
@@ -331,7 +331,7 @@ bot.add("/", [
                             case "news":
                                 session.userData.selectedPlan = "Custom TV Essential Plan";
                                 session.userData.selectedChannel = "news";
-                                session.userData.planPrice = 64.99;
+                                session.userData.planPrice = 15.00;
 
                                 var captionText = "Based on what we discussed, I'd recommend:\n[Custom TV Essential Plan](http://www.verizon.com/home/fiostv/)\n" +
                                     "Get a mix of your favorite original series, news and family channels for $64.99 mo plus taxes and other fees.";
@@ -353,7 +353,7 @@ bot.add("/", [
                             case "music":
                                 session.userData.selectedPlan = "Preferred HD Plan";
                                 session.userData.selectedChannel = "music";
-                                session.userData.planPrice = 74.99;
+                                session.userData.planPrice = 10.00;
 
                                 var captionText = "Based on what we discussed, I'd recommend:\n[Preferred HD Plan](http://www.verizon.com/home/fiostv/)\n" +
                                     "Watch exciting sports, music, comedy and travel – there’s never a dull moment for $74.99 mo plus taxes and other fees.";
@@ -474,18 +474,20 @@ bot.add("/", [
                 var orderDetails = "Your order details:\n";
                 for (var idx = 0; idx < session.userData.orderBucket.length; idx++) {
                     var objPlan = session.userData.orderBucket[idx];
-                    orderDetails = orderDetails + "\n" + (idx + 1) + ":" + objPlan.plan + "<-->" + objPlan.price;
+                    orderDetails = orderDetails + "\n" + (idx + 1) + ": " + objPlan.plan + "<--> $" + objPlan.price;
                     totalPrice = totalPrice + objPlan.price;
                 }
                 var numberOfTV = session.userData.numberOfTV;
+                var routerMonthlyCharges = 10;
                 var perEquipmentCharge = 12;
                 var totalEquipmentCharges = (numberOfTV * perEquipmentCharge);
-                var totalBillablePrice = totalPrice + totalEquipmentCharges;
+                var totalBillablePrice = totalPrice + totalEquipmentCharges + routerMonthlyCharges;
                 orderDetails = orderDetails + "\n";
                 orderDetails = orderDetails + "The cost of equipment for 1 Set Top Box is: $" + perEquipmentCharge + "/mo.\n";
                 orderDetails = orderDetails + "The number of TV you have is: " + numberOfTV + "\n";
                 orderDetails = orderDetails + "Total Equipment Charges (no. of TV X Cost of Equipment): = (" + numberOfTV + " * $" + perEquipmentCharge + ") = $" + totalEquipmentCharges +  "\n";
-                orderDetails = orderDetails + "Your total order value is Total Plan Price + Total Equipment Charges =>" + "($" + totalPrice + "+ $" + totalEquipmentCharges + ") => $" + totalBillablePrice + "\n";
+                orderDetails = orderDetails + "The Rental charges for the Router to connect your service to FiOS is : $" + routerMonthlyCharges + "/mo.\n";                
+                orderDetails = orderDetails + "Your total order value is Total Plan Price + Total Equipment Charges + Router Rental Charges =>" + "($" + totalPrice + "+ $" + totalEquipmentCharges + "+ $" + routerMonthlyCharges + ") => $" + totalBillablePrice + "\n";
                 session.send(orderDetails);
                 setTimeout(function () {
                     builder.Prompts.confirm(session, "Do you like to place this order now?\nPlease confirm.");
