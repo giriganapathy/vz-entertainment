@@ -132,7 +132,7 @@ bot.add("/", [
                         headers: { "Content-Type": "application/json" }
                     };
 
-                    client.get("http://fiosserviceavailabilityapp.azurewebsites.net/zipcode/" + zipCode, args, function (data, response) {
+                    client.get("http://fiosserviceavailabilityvzapp.azurewebsites.net/zipcode/" + zipCode, args, function (data, response) {
                         // parsed response body as js object 
                         var result = data["status"];
                         if (result) {
