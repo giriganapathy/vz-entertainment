@@ -8,10 +8,8 @@
     "email": ""
   },
   "dependencies": {
-    "node-rest-client": "^1.8.0",
-    "restify": "^4.0.4",
-    "botbuilder": "^3.2.3",
-    "restify": "^4.1.1",
+    "botbuilder": "^1.0.1",
+    "restify": "^4.1.0",
     "soap": "^0.16.0"    
   }
 }
