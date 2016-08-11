@@ -1,3 +1,3 @@
-﻿# VZChatBotApp
+﻿# VZEntertainmentApp
 
 
